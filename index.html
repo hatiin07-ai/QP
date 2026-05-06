@@ -461,8 +461,8 @@
       tab.addEventListener('click', (e) => {
         e.preventDefault();
         const target = tab.dataset.tab;
-        if (target === 'songbook') { alert('노래책 사이트로 이동합니다\n(Cloudflare Pages URL 설정 필요)'); return; }
-        if (target === 'upbo') { alert('업보 사이트로 이동합니다\n(Cloudflare Pages URL 설정 필요)'); return; }
+        if (target === 'songbook') { alert('노래책 사이트로 이동합니다'); return; }
+        if (target === 'upbo') { alert('업보 사이트로 이동합니다'); return; }
         if (target === 'schedule') { alert('일정 페이지 준비 중입니다'); return; }
         document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
