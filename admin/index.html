@@ -106,7 +106,7 @@
       document.querySelectorAll('.color-option').forEach(o=>o.classList.toggle('selected',o.dataset.color===c))}
     async function loadSchedules(){const mv=document.getElementById('filterMonth').value;const[y,m]=mv.split('-').map(Number);
       const s=`${y}-${String(m).padStart(2,'0')}-01`;const ed=new Date(y,m,0).getDate();const e=`${y}-${String(m).padStart(2,'0')}-${String(ed).padStart(2,'0')}`;
-      try{const{data,error}=await supabase.from('schedules').select('*').gte('event_date',s).lte('event_date',e).order('event_date').order('event_time');
+      try{const{data,error}=await supabaseClient.from('schedules').select('*').gte('event_date',s).lte('event_date',e).order('event_date').order('event_time');
         if(error)throw error;allSchedules=data||[]}catch(e){console.error(e);showToast('일정 로드 실패','error');allSchedules=[]}renderList()}
     function renderList(){const list=document.getElementById('scheduleList');const empty=document.getElementById('emptyState');
       if(!allSchedules.length){list.innerHTML='';empty.classList.remove('hidden');return}empty.classList.add('hidden');
@@ -124,8 +124,8 @@
       const description=document.getElementById('description').value.trim();
       if(!title||!eventDate){showToast('제목과 날짜는 필수입니다','error');return}
       const p={title,event_date:eventDate,event_time:eventTime,event_type:eventType,color:selectedColor,highlight,description};
-      try{if(editId){const{error}=await supabase.from('schedules').update(p).eq('id',editId);if(error)throw error;showToast('일정이 수정되었습니다','success')}
-        else{const{error}=await supabase.from('schedules').insert(p);if(error)throw error;showToast('일정이 추가되었습니다','success')}
+      try{if(editId){const{error}=await supabaseClient.from('schedules').update(p).eq('id',editId);if(error)throw error;showToast('일정이 수정되었습니다','success')}
+        else{const{error}=await supabaseClient.from('schedules').insert(p);if(error)throw error;showToast('일정이 추가되었습니다','success')}
         resetForm();loadSchedules()}catch(e){console.error(e);showToast('저장 실패: '+e.message,'error')}}
     function editSchedule(id){const ev=allSchedules.find(s=>s.id===id);if(!ev)return;
       document.getElementById('editId').value=ev.id;document.getElementById('title').value=ev.title;
@@ -135,7 +135,7 @@
       document.querySelectorAll('.color-option').forEach(c=>c.classList.toggle('selected',c.dataset.color===selectedColor));
       document.getElementById('formTitle').textContent='일정 수정';window.scrollTo({top:0,behavior:'smooth'})}
     async function deleteSchedule(id){if(!confirm('이 일정을 삭제하시겠습니까?'))return;
-      try{const{error}=await supabase.from('schedules').delete().eq('id',id);if(error)throw error;showToast('일정이 삭제되었습니다','success');loadSchedules()}
+      try{const{error}=await supabaseClient.from('schedules').delete().eq('id',id);if(error)throw error;showToast('일정이 삭제되었습니다','success');loadSchedules()}
       catch(e){console.error(e);showToast('삭제 실패','error')}}
     function resetForm(){document.getElementById('editId').value='';document.getElementById('title').value='';
       document.getElementById('eventTime').value='';document.getElementById('eventType').value='broadcast';

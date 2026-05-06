@@ -104,7 +104,7 @@
     async function loadMonth(){document.getElementById('calMonth').textContent=`${currentYear}년 ${currentMonth+1}월`;
       const s=`${currentYear}-${String(currentMonth+1).padStart(2,'0')}-01`;const e=new Date(currentYear,currentMonth+1,0);
       const eStr=`${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(e.getDate()).padStart(2,'0')}`;
-      try{const{data,error}=await supabase.from('schedules').select('*').gte('event_date',s).lte('event_date',eStr).order('event_date').order('event_time');
+      try{const{data,error}=await supabaseClient.from('schedules').select('*').gte('event_date',s).lte('event_date',eStr).order('event_date').order('event_time');
         if(error)throw error;schedules=data||[]}catch(e){console.error(e);schedules=[]}
       renderCalendar();renderUpcoming()}
     function renderCalendar(){const body=document.getElementById('calBody');body.innerHTML='';
