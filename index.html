@@ -461,7 +461,7 @@
       tab.addEventListener('click', (e) => {
         e.preventDefault();
         const target = tab.dataset.tab;
-        if (target === 'songbook') { return; } // href handles navigation
+        if (target === 'songbook') { window.location.href = 'https://qpsong.pages.dev/'; return; }
         if (target === 'upbo') { alert('업보 사이트로 이동합니다'); return; }
         if (target === 'schedule') { window.location.href = '/schedule/'; return; }
         document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
