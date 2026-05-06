@@ -29,10 +29,8 @@
     }
   </script>
   <style>
-    /* ---- Smooth Scroll ---- */
     html { scroll-behavior: smooth; }
 
-    /* ---- Scrollbar ---- */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #FFF8F6; }
     ::-webkit-scrollbar-thumb { background: #E0D6D6; border-radius: 3px; }
@@ -51,11 +49,9 @@
     .nav-tab::after {
       content: '';
       position: absolute;
-      bottom: 0;
-      left: 50%;
+      bottom: 0; left: 50%;
       transform: translateX(-50%);
-      width: 0;
-      height: 2px;
+      width: 0; height: 2px;
       background: #D4727A;
       border-radius: 1px;
       transition: width 0.3s ease;
@@ -65,75 +61,57 @@
     .nav-tab.active { color: #D4727A; }
     .nav-tab.active::after { width: 100%; }
 
-    /* ---- Hero ---- */
-    .hero-glow {
-      position: absolute;
+    /* ---- Hero 2-Column ---- */
+    .hero-section {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      padding: 32px 0;
+    }
+    .hero-left {
+      flex-shrink: 0;
+      position: relative;
+    }
+    .hero-avatar {
       width: 280px;
       height: 280px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(232,160,160,0.25) 0%, transparent 70%);
-      top: 50%;
-      left: 50%;
+      object-fit: cover;
+      border: 4px solid #E8A0A0;
+      box-shadow: 0 12px 40px rgba(212, 114, 122, 0.2);
+    }
+    .hero-glow {
+      position: absolute;
+      width: 340px; height: 340px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(232,160,160,0.2) 0%, transparent 70%);
+      top: 50%; left: 50%;
       transform: translate(-50%, -50%);
       pointer-events: none;
-    }
-
-    /* ---- Avatar ---- */
-    .avatar-ring {
-      position: relative;
-      width: 160px;
-      height: 160px;
-      border-radius: 50%;
-      padding: 4px;
-      background: linear-gradient(135deg, #E8A0A0, #D4727A, #E8A0A0);
-      box-shadow: 0 8px 32px rgba(212, 114, 122, 0.2);
-    }
-    .avatar-ring img {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid #FFF8F6;
-    }
-    .avatar-ring::before {
-      content: '';
-      position: absolute;
-      inset: -4px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, rgba(232,160,160,0.3), transparent, rgba(212,114,122,0.3));
-      animation: ring-rotate 6s linear infinite;
       z-index: -1;
     }
-    @keyframes ring-rotate {
-      to { transform: rotate(360deg); }
-    }
+    .hero-right { flex: 1; min-width: 0; }
 
-    /* ---- Decorative Divider ---- */
-    .deco-divider {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      color: #E8A0A0;
-      font-size: 0.75rem;
-      letter-spacing: 4px;
-      margin: 2rem 0;
-    }
-    .deco-divider::before,
-    .deco-divider::after {
-      content: '';
-      flex: 1;
-      max-width: 80px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, #E8A0A0, transparent);
+    @media (max-width: 768px) {
+      .hero-section {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+        padding: 24px 0;
+      }
+      .hero-avatar { width: 200px; height: 200px; }
+      .hero-glow { width: 260px; height: 260px; }
+      .hero-right { text-align: center; }
+      .nav-tab { padding: 10px 16px; font-size: 0.8125rem; }
+      .info-grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
     }
 
     /* ---- Info Cards ---- */
     .info-card {
       background: #fff;
       border: 0.5px solid rgba(232,160,160,0.3);
-      border-radius: 16px;
-      padding: 16px;
+      border-radius: 14px;
+      padding: 14px 12px;
       text-align: center;
       transition: all 0.3s ease;
     }
@@ -143,14 +121,14 @@
       border-color: #E8A0A0;
     }
     .info-label {
-      font-size: 0.6875rem;
+      font-size: 0.625rem;
       color: #8C8C8C;
       text-transform: uppercase;
       letter-spacing: 1px;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
     .info-value {
-      font-size: 0.9375rem;
+      font-size: 0.875rem;
       font-weight: 600;
       color: #3D3D3D;
     }
@@ -171,81 +149,46 @@
       border-color: #E8A0A0;
     }
     .cat-icon {
-      width: 48px;
-      height: 48px;
+      width: 48px; height: 48px;
       border-radius: 14px;
       background: #FFF0ED;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       margin: 0 auto 10px;
       font-size: 1.25rem;
     }
-    .cat-name {
-      font-size: 0.9375rem;
-      font-weight: 600;
-      color: #3D3D3D;
-      margin-bottom: 2px;
-    }
-    .cat-desc {
-      font-size: 0.75rem;
-      color: #8C8C8C;
-    }
+    .cat-name { font-size: 0.9375rem; font-weight: 600; color: #3D3D3D; margin-bottom: 2px; }
+    .cat-desc { font-size: 0.75rem; color: #8C8C8C; }
 
     /* ---- Goals ---- */
     .goal-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      display: flex; align-items: center; gap: 12px;
       padding: 12px 16px;
       background: #fff;
       border: 0.5px solid rgba(232,160,160,0.2);
       border-radius: 12px;
       transition: all 0.3s ease;
     }
-    .goal-item:hover {
-      transform: translateX(4px);
-      border-color: #E8A0A0;
-    }
+    .goal-item:hover { transform: translateX(4px); border-color: #E8A0A0; }
     .goal-num {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
+      width: 28px; height: 28px; border-radius: 50%;
       background: linear-gradient(135deg, #E8A0A0, #D4727A);
-      color: #fff;
-      font-size: 0.75rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+      color: #fff; font-size: 0.75rem; font-weight: 600;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
-    .goal-text {
-      font-size: 0.875rem;
-      color: #3D3D3D;
-    }
+    .goal-text { font-size: 0.875rem; color: #3D3D3D; }
 
     /* ---- VOD Player ---- */
     .vod-player-wrap {
-      border-radius: 16px;
-      overflow: hidden;
+      border-radius: 16px; overflow: hidden;
       box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-      background: #000;
-      aspect-ratio: 16/9;
+      background: #000; aspect-ratio: 16/9;
     }
-    .vod-player-wrap iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
+    .vod-player-wrap iframe { width: 100%; height: 100%; border: none; }
 
     /* ---- VOD Thumbnails ---- */
     .vod-thumb {
-      position: relative;
-      border-radius: 12px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.3s ease;
+      position: relative; border-radius: 12px; overflow: hidden;
+      cursor: pointer; transition: all 0.3s ease;
       border: 2px solid transparent;
     }
     .vod-thumb:hover {
@@ -256,58 +199,33 @@
       border-color: #D4727A;
       box-shadow: 0 4px 16px rgba(212,114,122,0.25);
     }
-    .vod-thumb img {
-      width: 100%;
-      aspect-ratio: 16/9;
-      object-fit: cover;
-      display: block;
-    }
+    .vod-thumb img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
     .vod-thumb-overlay {
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.6) 100%);
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
+      display: flex; flex-direction: column; justify-content: flex-end;
       padding: 10px 12px;
     }
-    .vod-thumb-title {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #fff;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-    }
+    .vod-thumb-title { font-size: 0.75rem; font-weight: 600; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
     .vod-thumb-play {
-      position: absolute;
-      top: 50%;
-      left: 50%;
+      position: absolute; top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
+      width: 32px; height: 32px; border-radius: 50%;
       background: rgba(212,114,122,0.85);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity 0.2s;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 12px;
+      opacity: 0; transition: opacity 0.2s;
     }
     .vod-thumb:hover .vod-thumb-play { opacity: 1; }
     .vod-thumb.active .vod-thumb-play { opacity: 0; }
 
     /* ---- SOOP Button ---- */
     .soop-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 28px;
-      border-radius: 999px;
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 28px; border-radius: 999px;
       background: linear-gradient(135deg, #D4727A, #E8A0A0);
-      color: #fff;
-      font-size: 0.875rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.3s ease;
+      color: #fff; font-size: 0.875rem; font-weight: 600;
+      text-decoration: none; transition: all 0.3s ease;
       box-shadow: 0 4px 16px rgba(212,114,122,0.25);
     }
     .soop-btn:hover {
@@ -315,41 +233,23 @@
       box-shadow: 0 8px 24px rgba(212,114,122,0.35);
     }
 
-    /* ---- Fade In Animation ---- */
+    /* ---- Fade In ---- */
     .fade-up {
-      opacity: 0;
-      transform: translateY(20px);
+      opacity: 0; transform: translateY(20px);
       transition: opacity 0.6s ease, transform 0.6s ease;
     }
-    .fade-up.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
 
     /* ---- Section Title ---- */
     .section-heading {
       font-family: 'Poppins', sans-serif;
-      font-size: 0.6875rem;
-      font-weight: 600;
-      color: #D4727A;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      text-align: center;
-      margin-bottom: 6px;
+      font-size: 0.6875rem; font-weight: 600;
+      color: #D4727A; text-transform: uppercase;
+      letter-spacing: 3px; text-align: center; margin-bottom: 6px;
     }
     .section-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #3D3D3D;
-      text-align: center;
-      margin-bottom: 24px;
-    }
-
-    /* ---- Responsive ---- */
-    @media (max-width: 640px) {
-      .avatar-ring { width: 120px; height: 120px; }
-      .nav-tab { padding: 10px 16px; font-size: 0.8125rem; }
-      .info-grid { grid-template-columns: repeat(2, 1fr) !important; }
+      font-size: 1.25rem; font-weight: 700;
+      color: #3D3D3D; text-align: center; margin-bottom: 24px;
     }
   </style>
 </head>
@@ -357,7 +257,7 @@
 
   <!-- Navbar -->
   <nav class="sticky top-0 z-50 bg-bg/95 backdrop-blur-sm border-b border-point/20">
-    <div class="max-w-3xl mx-auto flex items-center justify-center">
+    <div class="max-w-4xl mx-auto flex items-center justify-center">
       <a href="#" class="nav-tab active" data-tab="profile">프로필</a>
       <a href="#" class="nav-tab" data-tab="schedule">일정</a>
       <a href="#" class="nav-tab" data-tab="songbook">노래책</a>
@@ -365,174 +265,139 @@
     </div>
   </nav>
 
-  <!-- Main Content -->
-  <main class="max-w-3xl mx-auto px-4 pb-20">
+  <main class="max-w-4xl mx-auto px-4 pb-16">
 
-    <!-- ═══════════════════════════════════════ -->
-    <!-- SECTION 1: Hero Profile -->
-    <!-- ═══════════════════════════════════════ -->
-    <section class="pt-12 pb-4 fade-up">
-      <div class="relative text-center">
-        <div class="hero-glow"></div>
-
-        <!-- Avatar -->
-        <div class="avatar-ring mx-auto mb-5">
-          <img src="assets/images/avatar.png" alt="큐피">
+    <!-- HERO: 2-Column Desktop / Stack Mobile -->
+    <section class="fade-up">
+      <div class="hero-section">
+        <div class="hero-left">
+          <div class="hero-glow"></div>
+          <img class="hero-avatar" src="assets/images/avatar-round.jpg" alt="큐피">
         </div>
+        <div class="hero-right">
+          <h1 class="text-2xl md:text-3xl font-bold text-txt mb-1">
+            <span class="font-poppins">큐피</span>
+          </h1>
+          <p class="text-sub text-sm mb-4">SOOP 버츄얼 스트리머</p>
 
-        <!-- Name & Bio -->
-        <h1 class="text-2xl md:text-3xl font-bold text-txt mb-1">
-          <span class="font-poppins">큐피</span>
-        </h1>
-        <p class="text-sub text-sm mb-5">SOOP 버츄얼 스트리머</p>
+          <div class="info-grid-4 grid grid-cols-4 gap-2 mb-4">
+            <div class="info-card">
+              <div class="info-label">나이</div>
+              <div class="info-value">영원한 20살</div>
+            </div>
+            <div class="info-card">
+              <div class="info-label">생일</div>
+              <div class="info-value">10/22</div>
+            </div>
+            <div class="info-card">
+              <div class="info-label">MBTI</div>
+              <div class="info-value">ENFJ</div>
+            </div>
+            <div class="info-card">
+              <div class="info-label">데뷔</div>
+              <div class="info-value">2025.6.21</div>
+            </div>
+          </div>
 
-        <!-- SOOP Link -->
-        <a href="https://www.sooplive.com/station/jjuppi1022" target="_blank" rel="noopener" class="soop-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-          SOOP 방송국
-        </a>
-      </div>
+          <div class="grid grid-cols-2 gap-2 mb-5">
+            <div class="info-card">
+              <div class="info-label">팬 애칭</div>
+              <div class="info-value">둥이</div>
+              <p class="text-[0.625rem] text-sub mt-1">사랑둥이에서 유래</p>
+            </div>
+            <div class="info-card">
+              <div class="info-label">팬닉</div>
+              <div class="info-value">~에요</div>
+              <p class="text-[0.625rem] text-sub mt-1">ex: 여름이에요</p>
+            </div>
+          </div>
 
-      <!-- Decorative Divider -->
-      <div class="deco-divider">✧ ♡ ✧</div>
-
-      <!-- Info Cards Grid -->
-      <div class="info-grid grid grid-cols-3 md:grid-cols-5 gap-3">
-        <div class="info-card">
-          <div class="info-label">나이</div>
-          <div class="info-value">영원한 20살</div>
-        </div>
-        <div class="info-card">
-          <div class="info-label">생일</div>
-          <div class="info-value">10/22</div>
-        </div>
-        <div class="info-card">
-          <div class="info-label">MBTI</div>
-          <div class="info-value">ENFJ</div>
-        </div>
-        <div class="info-card">
-          <div class="info-label">데뷔</div>
-          <div class="info-value">2025.6.21</div>
-        </div>
-        <div class="info-card">
-          <div class="info-label">방송 시간</div>
-          <div class="info-value">오후 6시</div>
-        </div>
-      </div>
-
-      <!-- Decorative Divider -->
-      <div class="deco-divider">✧ ♡ ✧</div>
-
-      <!-- Fan Info -->
-      <div class="grid grid-cols-2 gap-3 max-w-xs mx-auto">
-        <div class="info-card">
-          <div class="info-label">팬 애칭</div>
-          <div class="info-value">둥이</div>
-          <p class="text-[0.625rem] text-sub mt-1">사랑둥이에서 유래</p>
-        </div>
-        <div class="info-card">
-          <div class="info-label">팬닉</div>
-          <div class="info-value">~에요</div>
-          <p class="text-[0.625rem] text-sub mt-1">ex: 여름이에요</p>
+          <a href="https://www.sooplive.com/station/jjuppi1022" target="_blank" rel="noopener" class="soop-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            SOOP 방송국
+          </a>
         </div>
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════ -->
-    <!-- SECTION 2: Broadcast Categories -->
-    <!-- ═══════════════════════════════════════ -->
-    <section class="py-8 fade-up">
-      <div class="section-heading">Contents</div>
-      <div class="section-title">방송 컨텐츠</div>
-
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div class="cat-card">
-          <div class="cat-icon">💬</div>
-          <div class="cat-name">소통</div>
-          <div class="cat-desc">시청자와 함께하는 잡담</div>
+    <!-- Categories + Goals (Side by Side Desktop) -->
+    <section class="py-6 fade-up">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+          <div class="section-heading">Contents</div>
+          <div class="section-title">방송 컨텐츠</div>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="cat-card">
+              <div class="cat-icon">💬</div>
+              <div class="cat-name">소통</div>
+              <div class="cat-desc">시청자와 함께하는 잡담</div>
+            </div>
+            <div class="cat-card">
+              <div class="cat-icon">🎤</div>
+              <div class="cat-name">노래</div>
+              <div class="cat-desc">Kpop · Jpop · Pop</div>
+            </div>
+            <div class="cat-card">
+              <div class="cat-icon">🎮</div>
+              <div class="cat-name">종합게임</div>
+              <div class="cat-desc">다양한 장르</div>
+            </div>
+            <div class="cat-card">
+              <div class="cat-icon">🎧</div>
+              <div class="cat-name">ASMR</div>
+              <div class="cat-desc">편안한 힐링</div>
+            </div>
+          </div>
         </div>
-        <div class="cat-card">
-          <div class="cat-icon">🎤</div>
-          <div class="cat-name">노래</div>
-          <div class="cat-desc">Kpop · Jpop · Pop</div>
-        </div>
-        <div class="cat-card">
-          <div class="cat-icon">🎮</div>
-          <div class="cat-name">종합게임</div>
-          <div class="cat-desc">다양한 장르</div>
-        </div>
-        <div class="cat-card">
-          <div class="cat-icon">🎧</div>
-          <div class="cat-name">ASMR</div>
-          <div class="cat-desc">편안한 힐링</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════════════ -->
-    <!-- SECTION 3: Goals -->
-    <!-- ═══════════════════════════════════════ -->
-    <section class="py-8 fade-up">
-      <div class="section-heading">Goals</div>
-      <div class="section-title">방송 목표</div>
-
-      <div class="space-y-3 max-w-md mx-auto">
-        <div class="goal-item">
-          <div class="goal-num">1</div>
-          <div class="goal-text">큐피의 성장형 크루 만들기</div>
-        </div>
-        <div class="goal-item">
-          <div class="goal-num">2</div>
-          <div class="goal-text">오리지널 3D 모델 제작</div>
-        </div>
-        <div class="goal-item">
-          <div class="goal-num">3</div>
-          <div class="goal-text">오리지널 노래 제작</div>
-        </div>
-        <div class="goal-item">
-          <div class="goal-num">4</div>
-          <div class="goal-text">솔로 콘서트</div>
+        <div>
+          <div class="section-heading">Goals</div>
+          <div class="section-title">방송 목표</div>
+          <div class="space-y-3">
+            <div class="goal-item">
+              <div class="goal-num">1</div>
+              <div class="goal-text">큐피의 성장형 크루 만들기</div>
+            </div>
+            <div class="goal-item">
+              <div class="goal-num">2</div>
+              <div class="goal-text">오리지널 3D 모델 제작</div>
+            </div>
+            <div class="goal-item">
+              <div class="goal-num">3</div>
+              <div class="goal-text">오리지널 노래 제작</div>
+            </div>
+            <div class="goal-item">
+              <div class="goal-num">4</div>
+              <div class="goal-text">솔로 콘서트</div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════ -->
-    <!-- SECTION 4: Fan-made VOD -->
-    <!-- ═══════════════════════════════════════ -->
-    <section class="py-8 fade-up">
+    <!-- VOD Covers -->
+    <section class="py-6 fade-up">
       <div class="section-heading">Covers</div>
       <div class="section-title">노래 커버</div>
 
-      <!-- Player -->
       <div class="vod-player-wrap mb-4" id="vodPlayer">
-        <iframe
-          src="https://vod.sooplive.com/player/194780409/embed?showChat=false&autoPlay=false&mutePlay=false"
-          allowfullscreen="true"
-          allow="clipboard-write; web-share;">
-        </iframe>
+        <iframe src="https://vod.sooplive.com/player/194780409/embed?showChat=false&autoPlay=false&mutePlay=false"
+          allowfullscreen="true" allow="clipboard-write; web-share;"></iframe>
       </div>
 
-      <!-- Thumbnails -->
       <div class="grid grid-cols-3 gap-3" id="vodThumbs">
         <div class="vod-thumb active" onclick="switchVod(0)" data-idx="0">
           <img src="assets/images/vod-honeyz.jpg" alt="HONEYZ - 사랑 받을 준비완료">
-          <div class="vod-thumb-overlay">
-            <div class="vod-thumb-title">사랑 받을 준비완료</div>
-          </div>
+          <div class="vod-thumb-overlay"><div class="vod-thumb-title">사랑 받을 준비완료</div></div>
           <div class="vod-thumb-play">▶</div>
         </div>
         <div class="vod-thumb" onclick="switchVod(1)" data-idx="1">
           <img src="assets/images/vod-eill.jpg" alt="EILL - フィナーレ">
-          <div class="vod-thumb-overlay">
-            <div class="vod-thumb-title">フィナーレ (피날레)</div>
-          </div>
+          <div class="vod-thumb-overlay"><div class="vod-thumb-title">フィナーレ (피날레)</div></div>
           <div class="vod-thumb-play">▶</div>
         </div>
         <div class="vod-thumb" onclick="switchVod(2)" data-idx="2">
           <img src="assets/images/vod-vaundy.jpg" alt="VAUNDY - 踊り子">
-          <div class="vod-thumb-overlay">
-            <div class="vod-thumb-title">踊り子 (무희)</div>
-          </div>
+          <div class="vod-thumb-overlay"><div class="vod-thumb-title">踊り子 (무희)</div></div>
           <div class="vod-thumb-play">▶</div>
         </div>
       </div>
@@ -540,13 +405,11 @@
 
   </main>
 
-  <!-- Footer -->
   <footer class="text-center py-8 text-sub text-xs border-t border-point/10">
     <p>© 2026 QP 💖</p>
   </footer>
 
   <script>
-    // ---- VOD Switching ----
     const vodData = [
       { id: '194780409', title: 'HONEYZ - 사랑 받을 준비완료' },
       { id: '194650125', title: 'EILL - フィナーレ (피날레)' },
@@ -554,47 +417,24 @@
     ];
 
     function switchVod(idx) {
-      const player = document.getElementById('vodPlayer');
-      const iframe = player.querySelector('iframe');
+      const iframe = document.querySelector('#vodPlayer iframe');
       iframe.src = `https://vod.sooplive.com/player/${vodData[idx].id}/embed?showChat=false&autoPlay=false&mutePlay=false`;
-
       document.querySelectorAll('.vod-thumb').forEach(t => t.classList.remove('active'));
       document.querySelector(`.vod-thumb[data-idx="${idx}"]`).classList.add('active');
     }
 
-    // ---- Scroll Fade In ----
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
     document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-    // ---- Navbar Active State ----
     document.querySelectorAll('.nav-tab').forEach(tab => {
       tab.addEventListener('click', (e) => {
         e.preventDefault();
         const target = tab.dataset.tab;
-
-        // External links (placeholder URLs - replace with actual CF Pages URLs)
-        if (target === 'songbook') {
-          // window.location.href = 'https://songbook.pages.dev';
-          alert('노래책 사이트로 이동합니다\n(Cloudflare Pages URL 설정 필요)');
-          return;
-        }
-        if (target === 'upbo') {
-          // window.location.href = 'https://qpwork.pages.dev';
-          alert('업보 사이트로 이동합니다\n(Cloudflare Pages URL 설정 필요)');
-          return;
-        }
-        if (target === 'schedule') {
-          alert('일정 페이지 준비 중입니다');
-          return;
-        }
-
+        if (target === 'songbook') { alert('노래책 사이트로 이동합니다\n(Cloudflare Pages URL 설정 필요)'); return; }
+        if (target === 'upbo') { alert('업보 사이트로 이동합니다\n(Cloudflare Pages URL 설정 필요)'); return; }
+        if (target === 'schedule') { alert('일정 페이지 준비 중입니다'); return; }
         document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
       });
