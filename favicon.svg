@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFF0ED"/>
+      <stop offset="100%" style="stop-color:#F5D5D5"/>
+    </linearGradient>
+    <linearGradient id="txt" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#D4727A"/>
+      <stop offset="100%" style="stop-color:#E87A7A"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#bg)"/>
+  <text x="32" y="43" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="700" font-size="28" fill="url(#txt)">QP</text>
+  <circle cx="50" cy="12" r="4" fill="#E8A0A0" opacity="0.6"/>
+  <circle cx="12" cy="52" r="3" fill="#E8A0A0" opacity="0.5"/>
+  <circle cx="54" cy="50" r="2.5" fill="#E8A0A0" opacity="0.4"/>
+  <text x="52" y="15" font-size="7" text-anchor="middle" fill="#D4727A" opacity="0.7">♡</text>
+</svg>
