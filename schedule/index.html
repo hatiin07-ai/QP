@@ -67,7 +67,8 @@
         <div class="flex items-center gap-2"><div class="legend-dot" style="background:#D4727A"></div><span class="text-xs text-sub">방송</span></div>
         <div class="flex items-center gap-2"><div class="legend-dot" style="background:#8C8C8C"></div><span class="text-xs text-sub">휴방</span></div>
         <div class="flex items-center gap-2"><div class="legend-dot" style="background:#9F7AEA"></div><span class="text-xs text-sub">이벤트</span></div>
-        <div class="flex items-center gap-2"><div class="legend-dot" style="background:#48BB78"></div><span class="text-xs text-sub">콜라보</span></div>
+        <div class="flex items-center gap-2"><div class="legend-dot" style="background:#48BB78"></div><span class="text-xs text-sub">합방</span></div>
+        <div class="flex items-center gap-2"><div class="legend-dot" style="background:#4299E1"></div><span class="text-xs text-sub">대회</span></div>
         <div class="flex items-center gap-2"><div class="legend-dot" style="background:#ED8936"></div><span class="text-xs text-sub">기타</span></div>
       </div>
     </section>
@@ -98,8 +99,8 @@
   <script src="/js/supabase-config.js"></script>
   <script>
     let currentYear,currentMonth;let schedules=[];
-    const TYPE_COLORS={'broadcast':'#D4727A','休放':'#8C8C8C','event':'#9F7AEA','collab':'#48BB78','other':'#ED8936'};
-    const TYPE_LABELS={'broadcast':'방송','休放':'휴방','event':'이벤트','collab':'콜라보','other':'기타'};
+    const TYPE_COLORS={'broadcast':'#D4727A','休放':'#8C8C8C','event':'#9F7AEA','collab':'#48BB78','tournament':'#4299E1','other':'#ED8936'};
+    const TYPE_LABELS={'broadcast':'방송','休放':'휴방','event':'이벤트','collab':'합방','tournament':'대회','other':'기타'};
     function init(){const n=new Date();currentYear=n.getFullYear();currentMonth=n.getMonth();loadMonth()}
     async function loadMonth(){document.getElementById('calMonth').textContent=`${currentYear}년 ${currentMonth+1}월`;
       const s=`${currentYear}-${String(currentMonth+1).padStart(2,'0')}-01`;const e=new Date(currentYear,currentMonth+1,0);
