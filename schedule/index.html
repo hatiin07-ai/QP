@@ -56,7 +56,15 @@
     .list-event-title{font-size:.9375rem;font-weight:600;color:#3D3D3D}
     .list-event-time{font-size:.75rem;color:#8C8C8C;margin-top:1px}
     .list-event-badge{font-size:.6875rem;padding:3px 10px;border-radius:999px;font-weight:500;flex-shrink:0}
-    .list-empty-day{padding:8px 14px;font-size:.8125rem;color:#ccc;font-style:italic}
+
+    /* Past events */
+    .list-date-group.past{opacity:.4}
+    .list-date-group.past .list-event-item{background:#fafafa}
+
+    /* Today divider */
+    .today-divider{display:flex;align-items:center;gap:10px;margin:20px 0 12px;padding:0 4px}
+    .today-divider::before,.today-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,#D4727A,transparent)}
+    .today-divider span{font-size:.75rem;font-weight:700;color:#D4727A;white-space:nowrap;letter-spacing:1px}
 
     /* ---- Show/Hide by breakpoint ---- */
     .desktop-only{display:block}
@@ -192,7 +200,7 @@
         dayEv.forEach(ev => {
           const c = ev.color || TYPE_COLORS[ev.event_type] || '#D4727A';
           const hl = ev.highlight ? ' highlight' : '';
-          const t = ev.event_time ? ev.event_time.slice(0,5)+' ' : '';
+          const t = ev.event_time ? ev.event_time.slice(0,2).replace(/^0/,'')+'시 ' : '';
           evH += `<div class="cal-event${hl}" style="background:${c}" onclick="showEvent('${ev.id}')" title="${ev.title}">${t}${ev.title}</div>`;
         });
         body.innerHTML += `<div class="cal-cell${isToday?' today':''}"><div class="cal-day-num">${d}</div>${evH}</div>`;
@@ -204,26 +212,38 @@
       const body = document.getElementById('listBody');
       const daysInMonth = new Date(currentYear, currentMonth+1, 0).getDate();
       const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
+      const isCurrentMonth = today.getFullYear()===currentYear && today.getMonth()===currentMonth;
       let html = '';
+      let todayInserted = false;
 
       for (let d = 1; d <= daysInMonth; d++) {
         const ds = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
         const dayEv = schedules.filter(s => s.event_date === ds);
-        if (dayEv.length === 0) continue; // 이벤트 없는 날은 스킵
+        if (dayEv.length === 0) continue;
 
         const date = new Date(currentYear, currentMonth, d);
         const dayOfWeek = date.getDay();
-        const isToday = today.getFullYear()===currentYear && today.getMonth()===currentMonth && today.getDate()===d;
+        const isToday = isCurrentMonth && today.getDate()===d;
+        const isPast = ds < todayStr;
+
+        // Insert TODAY divider before today's events
+        if (isCurrentMonth && !todayInserted && ds >= todayStr) {
+          html += `<div class="today-divider" id="todayAnchor"><span>TODAY</span></div>`;
+          todayInserted = true;
+        }
 
         let dayClass = 'list-day-num';
         if (isToday) dayClass += ' today';
         if (dayOfWeek === 0) dayClass += ' sunday';
         if (dayOfWeek === 6) dayClass += ' saturday';
 
-        html += `<div class="list-date-group">`;
+        const groupClass = isPast ? 'list-date-group past' : 'list-date-group';
+
+        html += `<div class="${groupClass}">`;
         html += `<div class="list-date-header">`;
         html += `<div class="${dayClass}">${d}</div>`;
-        html += `<div class="list-day-label">${DAYS[dayOfWeek]}요일</div>`;
+        html += `<div class="list-day-label">${DAYS[dayOfWeek]}요일${isToday ? ' · 오늘' : ''}</div>`;
         html += `</div>`;
 
         dayEv.forEach(ev => {
@@ -240,8 +260,12 @@
               <span class="list-event-badge" style="background:${c}18;color:${c}">${l}</span>
             </div>`;
         });
-
         html += `</div>`;
+      }
+
+      if (!todayInserted && isCurrentMonth) {
+        html += `<div class="today-divider" id="todayAnchor"><span>TODAY</span></div>`;
+        html += '<div class="text-center py-8 text-sub text-sm">남은 일정이 없습니다</div>';
       }
 
       if (!html) {
@@ -249,6 +273,12 @@
       }
 
       body.innerHTML = html;
+
+      // Auto-scroll to today
+      setTimeout(() => {
+        const anchor = document.getElementById('todayAnchor');
+        if (anchor) anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     }
 
     // ---- Upcoming (desktop) ----
