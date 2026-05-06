@@ -147,7 +147,7 @@
     /* ---- Goals ---- */
     .goal-item {
       display: flex; align-items: center; gap: 12px;
-      padding: 10px 16px;
+      padding: 11px 16px;
       background: #fff;
       border: 0.5px solid rgba(232,160,160,0.2);
       border-radius: 12px;
@@ -291,10 +291,27 @@
           <img class="hero-avatar" src="assets/images/avatar-round.jpg" alt="큐피">
         </div>
         <div class="hero-right">
-          <h1 class="text-2xl md:text-3xl font-bold text-txt mb-1">
-            <span class="font-poppins">큐피</span>
-          </h1>
-          <p class="text-sub text-sm mb-4">SOOP 버츄얼 스트리머</p>
+          <!-- Desktop: title + SOOP button side by side -->
+          <div class="hidden md:flex items-center gap-4 mb-5">
+            <h1 class="text-5xl font-bold text-txt">
+              <span class="font-poppins">큐피</span>
+            </h1>
+            <a href="https://www.sooplive.com/station/jjuppi1022" target="_blank" rel="noopener" class="soop-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              SOOP 방송국
+            </a>
+          </div>
+
+          <!-- Mobile: title stacked, then SOOP button -->
+          <div class="md:hidden mb-5">
+            <h1 class="text-4xl font-bold text-txt mb-3">
+              <span class="font-poppins">큐피</span>
+            </h1>
+            <a href="https://www.sooplive.com/station/jjuppi1022" target="_blank" rel="noopener" class="soop-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              SOOP 방송국
+            </a>
+          </div>
 
           <div class="info-grid-4 grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
             <div class="info-card py-8 px-4 md:p-3.5">
@@ -328,10 +345,6 @@
             </div>
           </div>
 
-          <a href="https://www.sooplive.com/station/jjuppi1022" target="_blank" rel="noopener" class="soop-btn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            SOOP 방송국
-          </a>
         </div>
       </div>
     </section>
