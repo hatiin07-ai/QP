@@ -18,9 +18,9 @@
 
     .overlay-bar {
       position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
+      top: 30px;
+      left: 30px;
+      transform: translateX(-30px);
       display: flex;
       align-items: center;
       gap: 16px;
@@ -36,7 +36,7 @@
     }
 
     .overlay-bar.visible {
-      transform: translateX(-50%) translateY(0);
+      transform: translateX(0);
       opacity: 1;
     }
 
@@ -57,7 +57,7 @@
     }
 
     .song-title {
-      font-size: 18px;
+      font-size: 21px;
       font-weight: 700;
       color: #fff;
       white-space: nowrap;
@@ -73,15 +73,15 @@
     }
 
     .song-artist {
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 500;
       color: rgba(255, 255, 255, 0.6);
     }
 
     .streamer-name {
-      font-size: 13px;
-      font-weight: 500;
-      color: #E8A0A0;
+      font-size: 15px;
+      font-weight: 600;
+      color: #FFB8C0;
     }
 
     .music-icon {
@@ -111,7 +111,7 @@
 </head>
 <body>
   <div class="overlay-bar" id="overlayBar">
-    <img class="profile-img" src="/assets/images/avatar-round.jpg" alt="큐피">
+    <img class="profile-img" id="profileImg" src="/assets/images/avatar-round.jpg" alt="큐피">
     <div class="song-info">
       <div class="song-title" id="songTitle"></div>
       <div class="song-meta">
@@ -177,6 +177,12 @@
     // Fallback polling every 5s
     poll();
     setInterval(poll, 5000);
+
+    // Custom image via URL param: ?img=URL
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('img')) {
+      document.getElementById('profileImg').src = params.get('img');
+    }
   </script>
 </body>
 </html>
