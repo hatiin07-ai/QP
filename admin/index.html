@@ -203,6 +203,12 @@
     const TYPE_LABELS={'broadcast':'방송','休放':'휴방','event':'이벤트','collab':'합방','tournament':'대회','other':'기타'};
     let selectedColor='#D4727A';let allSchedules=[];
 
+    // Songbook DB (separate Supabase project)
+    const songbookClient = supabase.createClient(
+      'https://dpditjxvhmfxkxbtgaak.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRwZGl0anh2aG1meGt4YnRnYWFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2ODUzMDAsImV4cCI6MjA5MjI2MTMwMH0.Or4Yh8OaS44TMBFQZ1uNqnOMnmepo6HCN3Wc_FP57XI'
+    );
+
     // ============ AUTH ============
     async function checkAuth() {
       const { data: { session } } = await supabaseClient.auth.getSession();
@@ -322,7 +328,7 @@
       clearTimeout(searchTimeout);
       searchTimeout = setTimeout(async () => {
         try {
-          const { data, error } = await supabaseClient.from('songs').select('id,title,artist,genre')
+          const { data, error } = await songbookClient.from('songs').select('id,title,artist,genre')
             .or(`title.ilike.%${q}%,artist.ilike.%${q}%`)
             .order('title').limit(15);
           if (error) throw error;
