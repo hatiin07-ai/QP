@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>큐피 오버레이</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 1920px;
+      height: 1080px;
+      background: transparent;
+      font-family: 'Pretendard', sans-serif;
+      overflow: hidden;
+    }
+
+    .overlay-bar {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 10px 28px 10px 10px;
+      background: rgba(30, 30, 30, 0.75);
+      backdrop-filter: blur(12px);
+      border-radius: 50px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      min-width: 320px;
+    }
+
+    .overlay-bar.visible {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .profile-img {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(212, 114, 122, 0.6);
+      flex-shrink: 0;
+    }
+
+    .song-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .song-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 400px;
+    }
+
+    .song-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .song-artist {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .streamer-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: #E8A0A0;
+    }
+
+    .music-icon {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      margin-left: auto;
+      padding-left: 16px;
+    }
+
+    .music-bar {
+      width: 3px;
+      border-radius: 2px;
+      background: #E8A0A0;
+      animation: eq 0.8s ease-in-out infinite alternate;
+    }
+    .music-bar:nth-child(1) { height: 12px; animation-delay: 0s; }
+    .music-bar:nth-child(2) { height: 18px; animation-delay: 0.15s; }
+    .music-bar:nth-child(3) { height: 10px; animation-delay: 0.3s; }
+    .music-bar:nth-child(4) { height: 16px; animation-delay: 0.1s; }
+
+    @keyframes eq {
+      0% { height: 4px; }
+      100% { height: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay-bar" id="overlayBar">
+    <img class="profile-img" src="/assets/images/avatar-round.jpg" alt="큐피">
+    <div class="song-info">
+      <div class="song-title" id="songTitle"></div>
+      <div class="song-meta">
+        <span class="song-artist" id="songArtist"></span>
+        <span class="streamer-name">🎤 큐피</span>
+      </div>
+    </div>
+    <div class="music-icon">
+      <div class="music-bar"></div>
+      <div class="music-bar"></div>
+      <div class="music-bar"></div>
+      <div class="music-bar"></div>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://uhzmyfvmkndrzzyeorwd.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVoem15ZnZta25kcnp6eWVvcndkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwMjkxNDEsImV4cCI6MjA5MzYwNTE0MX0.2SRfY8nUevM6yV7E3rgguyUqJt69L_zFqGuXTn-daGg';
+    const { createClient } = supabase;
+    const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const bar = document.getElementById('overlayBar');
+    const titleEl = document.getElementById('songTitle');
+    const artistEl = document.getElementById('songArtist');
+
+    let lastState = null;
+
+    async function poll() {
+      try {
+        const { data, error } = await sb.from('overlay_state').select('*').eq('id', 1).single();
+        if (error) throw error;
+
+        const key = `${data.is_visible}-${data.song_title}-${data.song_artist}`;
+        if (key === lastState) return;
+        lastState = key;
+
+        if (data.is_visible && data.song_title) {
+          titleEl.textContent = data.song_title;
+          artistEl.textContent = data.song_artist || '';
+          bar.classList.add('visible');
+        } else {
+          bar.classList.remove('visible');
+        }
+      } catch (e) {
+        console.error('Poll error:', e);
+      }
+    }
+
+    // Realtime subscription
+    sb.channel('overlay')
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'overlay_state' }, (payload) => {
+        const data = payload.new;
+        if (data.is_visible && data.song_title) {
+          titleEl.textContent = data.song_title;
+          artistEl.textContent = data.song_artist || '';
+          bar.classList.add('visible');
+        } else {
+          bar.classList.remove('visible');
+        }
+      })
+      .subscribe();
+
+    // Fallback polling every 5s
+    poll();
+    setInterval(poll, 5000);
+  </script>
+</body>
+</html>

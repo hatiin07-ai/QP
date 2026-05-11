@@ -136,6 +136,62 @@
           <div id="emptyState" class="text-center py-12 text-sub text-sm hidden">등록된 일정이 없습니다</div>
         </div>
       </div>
+
+      <!-- ============ OVERLAY CONTROL ============ -->
+      <div class="mt-10 border-t border-point/20 pt-8">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <h2 class="text-base font-bold text-txt">🎤 노래 오버레이</h2>
+            <p class="text-xs text-sub mt-1">OBS 브라우저 소스용 오버레이 컨트롤</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <span id="overlayStatus" class="text-xs px-3 py-1 rounded-full bg-gray-100 text-sub">OFF</span>
+            <button onclick="copyOverlayUrl()" class="btn-edit" style="font-size:.75rem">URL 복사</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Song Search -->
+          <div class="bg-white rounded-2xl border border-point/10 p-5">
+            <h3 class="text-sm font-bold text-txt mb-3">곡 검색 (노래책 DB)</h3>
+            <div class="relative mb-3">
+              <input type="text" id="songSearch" class="input-field" placeholder="제목 또는 아티스트 검색..." oninput="searchSongs()" autocomplete="off">
+              <div id="searchResults" class="absolute left-0 right-0 top-full mt-1 bg-white border border-point/20 rounded-xl shadow-lg max-h-48 overflow-y-auto hidden z-10"></div>
+            </div>
+            <div class="text-xs text-sub mb-3">또는 직접 입력:</div>
+            <div class="grid grid-cols-2 gap-2 mb-3">
+              <input type="text" id="manualTitle" class="input-field" placeholder="곡 제목">
+              <input type="text" id="manualArtist" class="input-field" placeholder="아티스트">
+            </div>
+            <div class="flex gap-2">
+              <button onclick="publishOverlay()" class="btn-primary flex-1">오버레이 표시</button>
+              <button onclick="hideOverlay()" class="btn-danger flex-1" style="text-align:center;padding:10px 14px;font-size:.875rem">숨기기</button>
+            </div>
+          </div>
+
+          <!-- Preview -->
+          <div class="bg-gray-900 rounded-2xl p-5 flex items-end justify-center min-h-[200px] relative overflow-hidden">
+            <div class="absolute top-3 left-4 text-[0.625rem] text-gray-500">미리보기</div>
+            <div id="previewBar" class="flex items-center gap-3 px-3 py-2 bg-black/60 backdrop-blur rounded-full border border-white/10 transition-all duration-500 opacity-0 translate-y-4 mb-4 max-w-full">
+              <img src="/assets/images/avatar-round.jpg" class="w-9 h-9 rounded-full border border-pink-400/50 flex-shrink-0">
+              <div class="min-w-0">
+                <div id="previewTitle" class="text-white text-sm font-bold truncate max-w-[200px]">곡 제목</div>
+                <div class="flex items-center gap-1.5">
+                  <span id="previewArtist" class="text-white/50 text-[0.6875rem]">아티스트</span>
+                  <span class="text-pink-300 text-[0.6875rem]">🎤 큐피</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-0.5 ml-3">
+                <div class="w-0.5 rounded-full bg-pink-300" style="height:8px;animation:eq .8s ease-in-out infinite alternate"></div>
+                <div class="w-0.5 rounded-full bg-pink-300" style="height:12px;animation:eq .8s ease-in-out .15s infinite alternate"></div>
+                <div class="w-0.5 rounded-full bg-pink-300" style="height:7px;animation:eq .8s ease-in-out .3s infinite alternate"></div>
+              </div>
+            </div>
+            <style>@keyframes eq{0%{height:3px}100%{height:14px}}</style>
+          </div>
+        </div>
+      </div>
+
     </main>
   </div>
 
@@ -193,6 +249,7 @@
       document.getElementById('adminPanel').classList.remove('hidden');
       document.getElementById('userEmail').textContent = user.email;
       initAdmin();
+      loadOverlayState();
     }
 
     // ============ ADMIN LOGIC ============
@@ -253,6 +310,127 @@
       document.getElementById('eventDate').value=new Date().toISOString().split('T')[0]}
 
     function showToast(msg,type='success'){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast ${type} show`;setTimeout(()=>t.classList.remove('show'),3000)}
+
+    // ============ OVERLAY CONTROL ============
+    let searchTimeout = null;
+
+    async function searchSongs() {
+      const q = document.getElementById('songSearch').value.trim();
+      const results = document.getElementById('searchResults');
+      if (q.length < 1) { results.classList.add('hidden'); return; }
+
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(async () => {
+        try {
+          const { data, error } = await supabaseClient.from('songs').select('id,title,artist,genre')
+            .or(`title.ilike.%${q}%,artist.ilike.%${q}%`)
+            .order('title').limit(15);
+          if (error) throw error;
+
+          if (!data.length) {
+            results.innerHTML = '<div class="p-3 text-sm text-sub">검색 결과 없음</div>';
+            results.classList.remove('hidden');
+            return;
+          }
+
+          results.innerHTML = data.map(s =>
+            `<div class="flex items-center gap-3 p-2.5 hover:bg-card cursor-pointer rounded-lg transition" onclick="selectSong('${s.title.replace(/'/g,"\\'")}','${s.artist.replace(/'/g,"\\'")}')">
+              <span class="text-[0.625rem] px-2 py-0.5 rounded-full bg-card text-accent font-medium">${s.genre}</span>
+              <div class="min-w-0 flex-1">
+                <div class="text-sm font-semibold text-txt truncate">${s.title}</div>
+                <div class="text-xs text-sub">${s.artist}</div>
+              </div>
+            </div>`
+          ).join('');
+          results.classList.remove('hidden');
+        } catch(e) { console.error(e); }
+      }, 300);
+    }
+
+    function selectSong(title, artist) {
+      document.getElementById('manualTitle').value = title;
+      document.getElementById('manualArtist').value = artist;
+      document.getElementById('songSearch').value = '';
+      document.getElementById('searchResults').classList.add('hidden');
+      updatePreview(title, artist);
+    }
+
+    function updatePreview(title, artist) {
+      const bar = document.getElementById('previewBar');
+      document.getElementById('previewTitle').textContent = title;
+      document.getElementById('previewArtist').textContent = artist;
+      bar.classList.remove('opacity-0', 'translate-y-4');
+      bar.classList.add('opacity-100', 'translate-y-0');
+    }
+
+    async function publishOverlay() {
+      const title = document.getElementById('manualTitle').value.trim();
+      const artist = document.getElementById('manualArtist').value.trim();
+      if (!title) { showToast('곡 제목을 입력하세요', 'error'); return; }
+
+      try {
+        const { error } = await supabaseClient.from('overlay_state')
+          .update({ song_title: title, song_artist: artist, is_visible: true })
+          .eq('id', 1);
+        if (error) throw error;
+        updatePreview(title, artist);
+        document.getElementById('overlayStatus').textContent = 'ON';
+        document.getElementById('overlayStatus').className = 'text-xs px-3 py-1 rounded-full bg-green-100 text-green-700 font-medium';
+        showToast('오버레이 표시 중', 'success');
+      } catch(e) { showToast('오버레이 업데이트 실패: ' + e.message, 'error'); }
+    }
+
+    async function hideOverlay() {
+      try {
+        const { error } = await supabaseClient.from('overlay_state')
+          .update({ is_visible: false })
+          .eq('id', 1);
+        if (error) throw error;
+        document.getElementById('previewBar').classList.add('opacity-0', 'translate-y-4');
+        document.getElementById('previewBar').classList.remove('opacity-100', 'translate-y-0');
+        document.getElementById('overlayStatus').textContent = 'OFF';
+        document.getElementById('overlayStatus').className = 'text-xs px-3 py-1 rounded-full bg-gray-100 text-sub';
+        showToast('오버레이 숨김', 'success');
+      } catch(e) { showToast('오버레이 숨기기 실패', 'error'); }
+    }
+
+    function copyOverlayUrl() {
+      const url = window.location.origin + '/overlay/';
+      navigator.clipboard.writeText(url).then(() => showToast('오버레이 URL 복사됨', 'success'));
+    }
+
+    // Close search results on outside click
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#songSearch') && !e.target.closest('#searchResults')) {
+        document.getElementById('searchResults')?.classList.add('hidden');
+      }
+    });
+
+    // Update preview on manual input
+    document.getElementById('manualTitle')?.addEventListener('input', () => {
+      const t = document.getElementById('manualTitle').value;
+      const a = document.getElementById('manualArtist').value;
+      if (t) updatePreview(t, a);
+    });
+    document.getElementById('manualArtist')?.addEventListener('input', () => {
+      const t = document.getElementById('manualTitle').value;
+      const a = document.getElementById('manualArtist').value;
+      if (t) updatePreview(t, a);
+    });
+
+    // Load current overlay state on admin init
+    async function loadOverlayState() {
+      try {
+        const { data } = await supabaseClient.from('overlay_state').select('*').eq('id', 1).single();
+        if (data && data.is_visible) {
+          document.getElementById('manualTitle').value = data.song_title;
+          document.getElementById('manualArtist').value = data.song_artist;
+          updatePreview(data.song_title, data.song_artist);
+          document.getElementById('overlayStatus').textContent = 'ON';
+          document.getElementById('overlayStatus').className = 'text-xs px-3 py-1 rounded-full bg-green-100 text-green-700 font-medium';
+        }
+      } catch(e) {}
+    }
 
     // ============ INIT ============
     checkAuth();
