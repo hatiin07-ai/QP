@@ -66,7 +66,12 @@
     }
 
     .song-title.rolling {
-      animation: marquee linear infinite;
+      overflow: hidden;
+    }
+
+    .rolling-inner {
+      display: inline-block;
+      white-space: nowrap;
     }
 
     @keyframes marquee {
@@ -170,10 +175,14 @@
 
       if (textWidth > containerWidth) {
         const text = titleEl.textContent;
-        titleEl.innerHTML = text + '\u3000\u3000\u3000\u3000' + text;
-        const duration = textWidth / 70;
-        titleEl.style.animation = `marquee ${duration}s linear infinite`;
-        titleEl.classList.add('rolling');
+        const gap = '\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0';
+        titleEl.innerHTML = '<span class="rolling-inner">' + text + gap + text + gap + '</span>';
+        const innerEl = titleEl.querySelector('.rolling-inner');
+        const halfWidth = (textWidth + 12 * 6) ; // text + gap width approx
+        // Measure actual half
+        const fullWidth = innerEl.scrollWidth / 2;
+        const duration = fullWidth / 70;
+        innerEl.style.animation = `marquee ${duration}s linear infinite`;
       }
     }
 
