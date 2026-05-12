@@ -19,7 +19,7 @@
     }
 
     .overlay-bar {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 20px;
       padding: 14px 36px 14px 14px;
@@ -29,7 +29,7 @@
       opacity: 0;
       transform: translateX(-30px);
       transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-      min-width: 420px;
+      max-width: 680px;
       margin: 10px;
     }
 
@@ -52,6 +52,7 @@
       flex-direction: column;
       gap: 4px;
       min-width: 0;
+      max-width: 460px;
     }
 
     .song-title {
@@ -60,8 +61,15 @@
       color: #fff;
       white-space: nowrap;
       overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 500px;
+    }
+
+    .song-title.rolling {
+      animation: marquee linear infinite;
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
     }
 
     .song-meta {
@@ -137,6 +145,36 @@
 
     let lastState = null;
 
+    function applyOverlay(data) {
+      if (data.is_visible && data.song_title) {
+        titleEl.textContent = data.song_title;
+        artistEl.textContent = data.song_artist || '';
+        bar.classList.add('visible');
+        setTimeout(checkRolling, 100);
+      } else {
+        bar.classList.remove('visible');
+        titleEl.classList.remove('rolling');
+        titleEl.style.animation = '';
+      }
+    }
+
+    function checkRolling() {
+      titleEl.classList.remove('rolling');
+      titleEl.style.animation = '';
+      titleEl.innerHTML = titleEl.textContent;
+
+      const textWidth = titleEl.scrollWidth;
+      const containerWidth = titleEl.parentElement.offsetWidth;
+
+      if (textWidth > containerWidth) {
+        const text = titleEl.textContent;
+        titleEl.innerHTML = text + '\u3000\u3000\u3000\u3000' + text;
+        const duration = textWidth / 40;
+        titleEl.style.animation = `marquee ${duration}s linear infinite`;
+        titleEl.classList.add('rolling');
+      }
+    }
+
     async function poll() {
       try {
         const { data, error } = await sb.from('overlay_state').select('*').eq('id', 1).single();
@@ -146,13 +184,7 @@
         if (key === lastState) return;
         lastState = key;
 
-        if (data.is_visible && data.song_title) {
-          titleEl.textContent = data.song_title;
-          artistEl.textContent = data.song_artist || '';
-          bar.classList.add('visible');
-        } else {
-          bar.classList.remove('visible');
-        }
+        applyOverlay(data);
       } catch (e) {
         console.error('Poll error:', e);
       }
@@ -161,14 +193,7 @@
     // Realtime subscription
     sb.channel('overlay')
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'overlay_state' }, (payload) => {
-        const data = payload.new;
-        if (data.is_visible && data.song_title) {
-          titleEl.textContent = data.song_title;
-          artistEl.textContent = data.song_artist || '';
-          bar.classList.add('visible');
-        } else {
-          bar.classList.remove('visible');
-        }
+        applyOverlay(payload.new);
       })
       .subscribe();
 
