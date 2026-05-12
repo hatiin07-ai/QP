@@ -45,6 +45,8 @@
       object-fit: cover;
       border: 3px solid rgba(212, 114, 122, 0.6);
       flex-shrink: 0;
+      position: relative;
+      z-index: 2;
     }
 
     .song-info {
@@ -53,6 +55,7 @@
       gap: 4px;
       min-width: 0;
       flex-shrink: 1;
+      overflow: hidden;
     }
 
     .song-title {
@@ -60,8 +63,6 @@
       font-weight: 700;
       color: #fff;
       white-space: nowrap;
-      overflow: hidden;
-      max-width: 460px;
     }
 
     .song-title.rolling {
@@ -170,7 +171,7 @@
       if (textWidth > containerWidth) {
         const text = titleEl.textContent;
         titleEl.innerHTML = text + '\u3000\u3000\u3000\u3000' + text;
-        const duration = textWidth / 40;
+        const duration = textWidth / 70;
         titleEl.style.animation = `marquee ${duration}s linear infinite`;
         titleEl.classList.add('rolling');
       }
