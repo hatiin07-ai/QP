@@ -12,14 +12,14 @@
   <script>
     tailwind.config = {
       theme: { extend: {
-        colors: { bg:'#FFF8F6', card:'#FFF0ED', point:'#E8A0A0', accent:'#D4727A', txt:'#3D3D3D', sub:'#8C8C8C', thead:'#F5D5D5' },
+        colors: { bg:'#fffbfb', card:'#FFF0ED', point:'#E8A0A0', accent:'#D4727A', txt:'#3D3D3D', sub:'#8C8C8C', thead:'#F5D5D5' },
         fontFamily: { sans:['Pretendard','sans-serif'], poppins:['Poppins','sans-serif'] }
       }}
     }
   </script>
   <style>
     html{scroll-behavior:smooth}
-    ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:#FFF8F6}::-webkit-scrollbar-thumb{background:#E0D6D6;border-radius:3px}
+    ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:#fffbfb}::-webkit-scrollbar-thumb{background:#E0D6D6;border-radius:3px}
 
     .nav-tab{position:relative;padding:12px 24px;font-size:.875rem;font-weight:500;color:#8C8C8C;transition:color .25s;text-decoration:none}
     .nav-tab::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:0;height:2px;background:#D4727A;border-radius:1px;transition:width .3s}
@@ -31,7 +31,7 @@
     .cal-header{text-align:center;font-size:.8125rem;font-weight:600;color:#8C8C8C;padding:8px 0}
     .cal-header:first-child{color:#D4727A}.cal-header:last-child{color:#7BA0D4}
     .cal-cell{min-height:90px;background:#fff;border-radius:12px;border:.5px solid rgba(232,160,160,.15);padding:6px 8px;transition:all .2s;cursor:default}
-    .cal-cell:hover{border-color:#E8A0A0;box-shadow:0 2px 12px rgba(232,160,160,.1)}
+    .cal-cell:hover{border-color:rgba(232,160,160,0.35);box-shadow:0 1px 6px rgba(232,160,160,0.08)}
     .cal-cell.empty{background:transparent;border-color:transparent}.cal-cell.empty:hover{box-shadow:none}
     .cal-cell.today{border-color:#D4727A;box-shadow:0 0 0 1px #D4727A}
     .cal-day-num{font-size:.8125rem;font-weight:600;color:#3D3D3D;margin-bottom:4px}
@@ -108,12 +108,12 @@
       </div>
       <!-- Legend (desktop only) -->
       <div class="flex flex-wrap items-center justify-center gap-4 mb-4 desktop-only">
-        <div class="flex items-center gap-2"><div class="legend-dot" style="background:#D4727A"></div><span class="text-xs text-sub">방송</span></div>
-        <div class="flex items-center gap-2"><div class="legend-dot" style="background:#8C8C8C"></div><span class="text-xs text-sub">휴방</span></div>
-        <div class="flex items-center gap-2"><div class="legend-dot" style="background:#9F7AEA"></div><span class="text-xs text-sub">이벤트</span></div>
-        <div class="flex items-center gap-2"><div class="legend-dot" style="background:#48BB78"></div><span class="text-xs text-sub">합방</span></div>
-        <div class="flex items-center gap-2"><div class="legend-dot" style="background:#4299E1"></div><span class="text-xs text-sub">대회</span></div>
-        <div class="flex items-center gap-2"><div class="legend-dot" style="background:#ED8936"></div><span class="text-xs text-sub">기타</span></div>
+        <div class="flex items-center gap-2"><div class="legend-dot" style="background:#f87cba"></div><span class="text-xs text-sub">방송</span></div>
+        <div class="flex items-center gap-2"><div class="legend-dot" style="background:#b6b6b6"></div><span class="text-xs text-sub">휴방</span></div>
+        <div class="flex items-center gap-2"><div class="legend-dot" style="background:#b39ddb"></div><span class="text-xs text-sub">이벤트</span></div>
+        <div class="flex items-center gap-2"><div class="legend-dot" style="background:#80cbc4"></div><span class="text-xs text-sub">합방</span></div>
+        <div class="flex items-center gap-2"><div class="legend-dot" style="background:#90caf9"></div><span class="text-xs text-sub">대회</span></div>
+        <div class="flex items-center gap-2"><div class="legend-dot" style="background:#ffcc80"></div><span class="text-xs text-sub">기타</span></div>
       </div>
     </section>
 
@@ -158,7 +158,7 @@
     let currentYear, currentMonth;
     let schedules = [];
     const DAYS = ['일','월','화','수','목','금','토'];
-    const TYPE_COLORS = {'broadcast':'#D4727A','休放':'#8C8C8C','event':'#9F7AEA','collab':'#48BB78','tournament':'#4299E1','other':'#ED8936'};
+    const TYPE_COLORS = {'broadcast':'#f87cba','休放':'#b6b6b6','event':'#b39ddb','collab':'#80cbc4','tournament':'#90caf9','other':'#ffcc80'};
     const TYPE_LABELS = {'broadcast':'방송','休放':'휴방','event':'이벤트','collab':'합방','tournament':'대회','other':'기타'};
 
     function init() {
@@ -301,7 +301,7 @@
         const t = ev.event_time ? ev.event_time.slice(0,5) : '';
         const dd = new Date(ev.event_date+'T00:00:00');
         const ds = `${dd.getMonth()+1}/${dd.getDate()} (${DAYS[dd.getDay()]})`;
-        return `<div class="flex items-center gap-4 p-4 bg-white rounded-xl border border-point/10 hover:border-point/30 transition cursor-pointer" onclick="showEvent('${ev.id}')">
+        return `<div class="flex items-center gap-4 p-4 bg-white rounded-xl border border-point/10 hover:border-point/15 transition cursor-pointer" onclick="showEvent('${ev.id}')">
           <div class="w-1 h-10 rounded-full flex-shrink-0" style="background:${c}"></div>
           <div class="flex-1 min-w-0"><div class="font-semibold text-txt text-sm">${ev.title}</div><div class="text-xs text-sub">${ds} ${t?'· '+t:''}</div></div>
           <span class="text-xs px-2 py-1 rounded-full flex-shrink-0" style="background:${c}20;color:${c}">${l}</span></div>`;
