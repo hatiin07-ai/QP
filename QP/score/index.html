@@ -416,7 +416,19 @@ function getStatus(a, b, done) {
 
 // 렌더링
 function renderSetup() {
-  document.getElementById('setupGrid').innerHTML = `
+  const el = document.getElementById('setupGrid');
+  if (el.children.length > 0) {
+    // 이미 렌더된 경우 value만 동기화 (포커스 유지)
+    const inputs = el.querySelectorAll('input');
+    inputs.forEach((inp, idx) => {
+      const team = idx < 5 ? 'A' : 'B';
+      const i = idx % 5;
+      const val = team === 'A' ? state.teamA[i] : state.teamB[i];
+      if (inp !== document.activeElement) inp.value = val;
+    });
+    return;
+  }
+  el.innerHTML = `
     <div class="team-setup">
       <div class="team-setup-head a">🌸 큐피팀</div>
       <div class="team-setup-body">
@@ -425,7 +437,7 @@ function renderSetup() {
             <span class="player-lbl ${i===0?'captain-a':''}">${i===0?'팀장':`P${i}`}</span>
             <input class="player-input" type="text" placeholder="${i===0?'큐피':`팀원 ${i}`}" maxlength="10"
               value="${state.teamA[i]}"
-              oninput="state.teamA[${i}]=this.value; renderAll()">
+              oninput="state.teamA[${i}]=this.value; renderExceptSetup()">
           </div>`).join('')}
       </div>
     </div>
@@ -437,7 +449,7 @@ function renderSetup() {
             <span class="player-lbl ${i===0?'captain-b':''}">${i===0?'팀장':`P${i}`}</span>
             <input class="player-input b" type="text" placeholder="${i===0?'단츄':`팀원 ${i}`}" maxlength="10"
               value="${state.teamB[i]}"
-              oninput="state.teamB[${i}]=this.value; renderAll()">
+              oninput="state.teamB[${i}]=this.value; renderExceptSetup()">
           </div>`).join('')}
       </div>
     </div>`;
@@ -593,6 +605,12 @@ function setTiePlayer(team, playerIdx) {
 function setTieWinner(team) {
   state.tiebreak.winner = state.tiebreak.winner === team ? '' : team;
   renderAll();
+}
+
+function renderExceptSetup() {
+  renderTracker();
+  renderScoreboard();
+  renderMatches();
 }
 
 function renderAll() {
