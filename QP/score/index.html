@@ -33,7 +33,9 @@ body {
   background: var(--bg);
   color: var(--ink);
   min-height: 100vh;
-  padding: 2.5rem 400px 5rem;
+  padding: 2.5rem 1.5rem 5rem;
+  max-width: 900px;
+  margin: 0 auto;
 }
 h1.title {
   font-size: 1.4rem;
@@ -318,12 +320,15 @@ h1.title {
 .dot.used-a { background: var(--rose); border-color: var(--rose-mid); }
 .dot.used-b { background: var(--blue); border-color: var(--blue-mid); }
 
-@media (max-width: 900px) {
-  body { padding: 1.5rem 1rem 4rem; }
+@media (max-width: 640px) {
   .setup-grid { grid-template-columns: 1fr; }
-  .score-header-row { grid-template-columns: 1fr 60px 1fr; }
-  .match-row { grid-template-columns: 28px 1fr 1fr 50px; }
+  .score-header-row { grid-template-columns: 1fr 80px 1fr; }
+  .team-score-num { font-size: 3rem; }
   .tracker-wrap { grid-template-columns: 1fr; }
+  .match-row { grid-template-columns: 28px 80px 1fr 44px 1fr; }
+  .match-row > div:last-child { display: none; }
+  .tiebreak-row { grid-template-columns: 28px 80px 1fr 44px 1fr; }
+  .tiebreak-row > div:last-child { display: none; }
 }
 </style>
 </head>
