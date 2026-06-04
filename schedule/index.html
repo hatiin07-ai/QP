@@ -36,7 +36,7 @@
     .cal-cell.today{border-color:#D4727A;box-shadow:0 0 0 1px #D4727A}
     .cal-day-num{font-size:.8125rem;font-weight:600;color:#3D3D3D;margin-bottom:4px}
     .cal-cell:nth-child(7n+1) .cal-day-num{color:#D4727A}.cal-cell:nth-child(7n) .cal-day-num{color:#7BA0D4}
-    .cal-event{font-size:.6875rem;padding:3px 6px;border-radius:6px;margin-bottom:2px;color:#fff;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;transition:opacity .2s}
+    .cal-event{display:block;width:100%;font-size:.6875rem;padding:3px 6px;border-radius:6px;margin-bottom:2px;color:#fff;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;transition:opacity .2s;box-sizing:border-box;}
     .cal-event:hover{opacity:.85}
     .cal-event.highlight{animation:pulse-glow 1.5s ease-in-out infinite;border:1px solid rgba(255,255,255,.5)}
     @keyframes pulse-glow{0%,100%{box-shadow:0 0 0 0 rgba(212,114,122,.4);transform:scale(1)}50%{box-shadow:0 0 12px 4px rgba(212,114,122,.5);transform:scale(1.02)}}
